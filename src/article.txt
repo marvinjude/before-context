@@ -1,0 +1,54 @@
+You may not need Redux
+Before Considering a state managent library
+☑  Before using Context...
+
+A few months back, i started using react, most of us can relate as to how it gets messy when
+your app gets bigger because you tend to keep passing down props till it gets to the inner 
+components thats needs it.
+
+                     Level1 
+                        Level2 
+                           Level3 
+                              ...
+Though This is Fine as it is just the way react works. but we wouldnt want a behemoth of
+of unmaintainable code. so  we would usually reach out to state management 
+libraries(REDUX/MOBX)/The New Context API 😜 its getting old now. There are millilons of tools
+nowadays that will  blow your mind but you've  gotta know  when to use them and you'll be fine
+not knowing when to use them makes you take longer than expected on a project while trying
+to understand how context, Redux or Mobx works or other libraries in general.
+
+
+Componets Composition
+______________________
+You can escape "props drilling" by passing down components as props so the components has
+the data it needs before its being passed  down as prop.
+for the purpose of demonstartion we would build a $30BILLION app 😜 
+.yea you heared me right.
+
+The App Structure will look like:
+
+<App>
+  <PageLayout/>
+     <NavigationBar> 
+        <Avatar/>
+      </NavigationBar>
+   <PageLayout/>
+</App>
+ 
+ Here the avatar component needs a user prop followthe traditional way we would keep passing
+ down a user prop till it gets to ````<Avatar>``` like so
+
+<App>
+  <PageLayout/>
+     <NavigationBar> 
+        <Avatar/>
+      </NavigationBar>
+   <PageLayout/>
+</App>
+
+
+
+
+If you are reaching out to a React Context or Redux 
+
+Recenly @dan_abramov tweeted about this (http://twitter.com/dan_abramov/status/1021924308740984834?s=19)
