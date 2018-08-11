@@ -1,22 +1,23 @@
-You may not need Redux
-Before Considering a state managent library
+
 ☑  Before using Context...
 
-A few months back, i started using react, most of us can relate as to how it gets messy when
-your app gets bigger because you tend to keep passing down props till it gets to the inner 
+A few months back, i started using react, most of us can relate to how it gets messy even before
+your app starts to get large, because you tend to keep passing down props till it gets to the inner 
 components thats needs it.
 
                      Level1 
                         Level2 
                            Level3 
                               ...
-Though This is Fine as it is just the way react works. but we wouldnt want a behemoth of
-of unmaintainable code. so  we would usually reach out to state management 
+Though This is Fine as it is just the way react works, but we wouldn't want a behemoth of
+of unmaintainable code. so we would usually reach out to state management 
 libraries(REDUX/MOBX)/The New Context API 😜 its getting old now. There are millilons of tools
-nowadays that will  blow your mind but you've  gotta know  when to use them and you'll be fine
+nowadays that will  blow your mind but you've  gotta know  when to use them and you'll be fine,
 not knowing when to use them makes you take longer than expected on a project while trying
-to understand how context, Redux or Mobx works or other libraries in general.
+to understand how context, Redux or Mobx works or other libraries in general. 
 
+How do you eliminate props drilling? 
+ 
 
 Componets Composition
 ______________________
@@ -32,23 +33,123 @@ The App Structure will look like:
      <NavigationBar> 
         <Avatar/>
       </NavigationBar>
+      <Main>
+        ....
+      </Main>
    <PageLayout/>
 </App>
  
- Here the avatar component needs a user prop followthe traditional way we would keep passing
- down a user prop till it gets to ````<Avatar>``` like so
+ Here the avatar component needs a user prop following the traditional way we would keep 
+ passing down a user prop till it gets to ````<Avatar>``` like so
 
 <App>
-  <PageLayout/>
-     <NavigationBar> 
-        <Avatar/>
+  <PageLayout user={user}/>
+     <NavigationBar user={user}> 
+        <Avatar user={user}/>
       </NavigationBar>
+      <Main/>
    <PageLayout/>
 </App>
 
+"Its feels redundant to pass down the user prop through many levels if in the end only
+the avatar component really needs it, Its also annoying that if the avatar component needs
+more props from the top you have to remember to add th in all intermediate levels too"
+
+Solution
+________
+<App>
+    <PageLayout>
+        <NavigationBar avatar={<Avatar user={this.state.user} />} />
+        <Main user={this.state.user}/>
+    </PageLayout>
+</App>
+
+Aha! i know what you are thinking - i didn't formulate the idea even @dan_abramov
+tweeted about this (http://twitter.com/dan_abramov/status/1021924308740984834?s=19)
+and add a section to the ReactJS Docs
+
+Lets Check Some Real Code Sample
+________________________________
+
+class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: {
+        name: "Prof. Yemi Osinbajo",
+        image: "https://i1.wp.com/techpoint.africa/wp-content/uploads/2015/12/Professor-Yemi-Osinbajo.jpg?w=622&ssl=1",
+        position: "VICE PRESIDENT. NIGERIA"
+      }
+    }
+  }
+  
+  render() {
+    return (
+      <AppWrapper>
+        <PageLayout>
+          <NavigationBar avatar={<Avatar user={this.state.user} />} />
+          <Main user={this.state.user}/>
+        </PageLayout>
+      </AppWrapper>
+    );
+  }
+}
+
+<AppWrapper> above is just a styled component trying to style th app a lil bit
+you can  see how we passed in the user prop to avatar component without  letting most
+components know about it?
+
+Other components Will look like so 
+
+const PageLayout = ({children}) => {
+  return (
+    <PageLayoutWrapper>
+      {children}
+    </PageLayoutWrapper>
+  );
+}
+
+const NavigationBar = ({avatar}) => {
+  return (
+    <NavbarWrapper>
+      {avatar}
+    </NavbarWrapper>
+  );  
+}
+
+const Main = ({ user }) => { 
+  return (
+    <MainWrapper>
+      <Card>
+        <Image src={user.image} />
+        <UserInfo>
+          <UserName>{user.name}</UserName>
+          <UserPosition>{user.position}</UserPosition>
+          <Image small src={NG}/>
+        </UserInfo>
+      </Card>
+    </MainWrapper>
+  )
+}
+
+const Avatar = ({ user }) => {
+  return (
+     <Image small rounded src={user.image} />
+  )
+}
+
+That was pretty straight foward , We pass componenets as props! and this saves us the 
+whole prop drilling thing. However this should be used with care.
 
 
+when then should context be used
+________________________________
+you should use context when same data needs to be accessible by many components
+in the tree and at diffrent nested levels.Context let you broadcast such data
+and chahges to all components below.
 
-If you are reaching out to a React Context or Redux 
 
-Recenly @dan_abramov tweeted about this (http://twitter.com/dan_abramov/status/1021924308740984834?s=19)
+Feel free to check out the code(http://www.github.com/marvinjude/before-context)
+
+
