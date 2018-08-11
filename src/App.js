@@ -54,11 +54,12 @@ const UserInfo = CenteredFlex.extend`
    padding:20px;
    flex-direction:column;
 `
-const MainWrapper = CenteredFlex.extend`
+const MainWrapper = CenteredFlex.withComponent('main').extend`
   background-color:white;
   position:relative;
   height:92vh;
 `
+
 const Image = styled.img.attrs(`
   src : ${props => props.src}
 `)
